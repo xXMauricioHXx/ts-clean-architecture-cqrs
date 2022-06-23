@@ -1,4 +1,4 @@
-import knex, { Knex } from 'knex';
+import { Knex } from 'knex';
 
 export abstract class Repository<T> {
   protected abstract database: Knex;

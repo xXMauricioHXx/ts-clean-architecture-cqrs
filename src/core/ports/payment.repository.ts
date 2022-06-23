@@ -1,8 +1,8 @@
 export namespace PaymentRepository {
   export type Model = {
     id: string;
-    payerId: string;
-    receiverId: string;
+    payerId: number;
+    receiverId: number;
     value: number;
     description?: string;
     createdAt: Date;
@@ -11,15 +11,15 @@ export namespace PaymentRepository {
 
   export type CreateParams = {
     id: string;
-    payerId: string;
-    receiverId: string;
+    payerId: number;
+    receiverId: number;
     value: number;
     description?: string;
   };
 }
 
 export interface PaymentRepository {
-  getValueInDate(payerId: string, payedDate: Date): Promise<number>;
+  getValueInDate(payerId: number, payedDate: Date): Promise<number>;
   createPayment(
     payment: PaymentRepository.CreateParams
   ): Promise<PaymentRepository.Model>;

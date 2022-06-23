@@ -1,4 +1,4 @@
-import { IsInt, IsNotEmpty, IsEnum } from 'class-validator';
+import { IsInt, IsNotEmpty, IsEnum, IsUrl } from 'class-validator';
 
 export class EnvValidator {
   @IsInt()
@@ -64,6 +64,10 @@ export class EnvValidator {
   @IsNotEmpty()
   @IsInt()
   dbPoolMin: number;
+
+  @IsUrl()
+  @IsNotEmpty()
+  jsonPlaceHolderURL: string;
 
   constructor(props: any) {
     Object.assign(this, props);

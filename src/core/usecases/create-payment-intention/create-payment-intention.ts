@@ -1,24 +1,24 @@
 import { inject, injectable } from 'tsyringe';
 import { Payment } from '@/core/entities';
-import {
-  MaxLimitReachedError,
-  OutSideOfWindowValueError,
-} from '@/core/exceptions';
-import { PaymentRepository } from '@/core/ports';
+import { PaymentRepository, UserService } from '@/core/ports';
 import { CreatePaymentIntention } from '@/core/usecases';
+import { dateNow } from '@/shared/helpers';
 
 @injectable()
 export class CreatePaymentIntentionUseCase implements CreatePaymentIntention {
   constructor(
     @inject('PaymentRepository')
-    private readonly paymentRepository: PaymentRepository
+    private readonly paymentRepository: PaymentRepository,
+    @inject('UserService') private readonly userService: UserService
   ) {}
 
   async create(
     data: CreatePaymentIntention.Params
   ): Promise<CreatePaymentIntention.Result> {
     const { receiverId, value, description, payerId, id } = data;
-    const payedDate = new Date(Date.now());
+    const payedDate = dateNow();
+
+    await this.checkPayerAndReceiverExists(payerId, receiverId);
 
     const valueInDate = await this.paymentRepository.getValueInDate(
       payerId,
@@ -28,26 +28,19 @@ export class CreatePaymentIntentionUseCase implements CreatePaymentIntention {
     const payment = new Payment({
       id,
       receiverId,
+      payerId,
       value,
       description,
       valueInDate,
       payedDate,
     });
 
-    if (payment.isReachedLimit()) {
-      throw new MaxLimitReachedError();
-    }
-
-    if (payment.isOutSideFromWindowValue()) {
-      throw new OutSideOfWindowValueError();
-    }
-
     const createdPayment = await this.paymentRepository.createPayment({
-      id,
       payerId,
       receiverId,
-      value,
-      description,
+      description: payment.description,
+      id: payment.id,
+      value: payment.value,
     });
 
     return {
@@ -59,5 +52,15 @@ export class CreatePaymentIntentionUseCase implements CreatePaymentIntention {
       createdAt: createdPayment.createdAt,
       updatedAt: createdPayment.updatedAt,
     };
+  }
+
+  private async checkPayerAndReceiverExists(
+    payerId: number,
+    receiverId: number
+  ): Promise<void> {
+    await Promise.all([
+      this.userService.checkUserExists(payerId),
+      this.userService.checkUserExists(receiverId),
+    ]);
   }
 }

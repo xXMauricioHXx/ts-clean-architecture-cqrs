@@ -14,8 +14,13 @@ import { CodedError } from '@/shared/coded-error';
 import {
   MaxLimitReachedError,
   OutSideOfWindowValueError,
+  SameOriginError,
+  UserNotFoundError,
 } from '@/core/exceptions';
-import { BadRequest } from '@/presentation/http/controllers/exceptions';
+import {
+  BadRequest,
+  NotFoundError,
+} from '@/presentation/http/controllers/exceptions';
 
 @injectable()
 @post('/payments')
@@ -49,9 +54,14 @@ export class CreatePaymentIntentionController extends Controller {
 
       if (
         error instanceof OutSideOfWindowValueError ||
-        error instanceof MaxLimitReachedError
+        error instanceof MaxLimitReachedError ||
+        error instanceof SameOriginError
       ) {
         return new BadRequest(code, message);
+      }
+
+      if (error instanceof UserNotFoundError) {
+        return new NotFoundError(code, message);
       }
     }
 
@@ -62,8 +72,8 @@ export class CreatePaymentIntentionController extends Controller {
 export namespace CreatePaymentIntentionController {
   export type Response = {
     id: string;
-    payer_id: string;
-    receiver_id: string;
+    payer_id: number;
+    receiver_id: number;
     description?: string;
     value: number;
     created_at: string;
@@ -72,8 +82,8 @@ export namespace CreatePaymentIntentionController {
 
   export type Request = {
     id: string;
-    payer_id: string;
-    receiver_id: string;
+    payer_id: number;
+    receiver_id: number;
     description?: string;
     value: number;
   };

@@ -32,8 +32,8 @@ export class ListPaymentsIntentionController extends Controller {
 export namespace ListPaymentsIntentionController {
   export type Response = {
     id: string;
-    payer_id: string;
-    receiver_id: string;
+    payer_id: number;
+    receiver_id: number;
     description?: string;
     value: number;
     created_at: string;

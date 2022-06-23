@@ -27,6 +27,7 @@ const props = {
   dbPort: parseInt(process.env.DB_PORT || '3600', 10),
   dbPoolMax: parseInt(process.env.DB_POOL_MAX || '1', 10),
   dbPoolMin: parseInt(process.env.DB_POOL_MIN || '1', 10),
+  jsonPlaceHolderURL: process.env.JSON_PLACE_HOLDER_URL || '',
 };
 
 export const env = new EnvValidator(props);

@@ -1,7 +1,4 @@
 import { inject, injectable } from 'tsyringe';
-import logger from '@/logger';
-import { queue, schema } from '@/shared/decorators';
-import { CreatePaymentIntention } from '@/core/usecases';
 import {
   AmqpRequest,
   Consumer,
@@ -11,6 +8,9 @@ import {
   CreatePaymentIntentionPresenter,
   createPaymentIntentionSchema,
 } from '@/presentation/amqp/consumers';
+import logger from '@/logger';
+import { queue, schema } from '@/shared/decorators';
+import { CreatePaymentIntention } from '@/core/usecases';
 import { ValidationError } from '@/shared/validation-error';
 
 @injectable()
@@ -50,8 +50,8 @@ export class CreatePaymentIntentionConsumer extends Consumer {
 export namespace CreatePaymentIntentionConsumer {
   export type Request = {
     id: string;
-    payer_id: string;
-    receiver_id: string;
+    payer_id: number;
+    receiver_id: number;
     description?: string;
     value: number;
   };

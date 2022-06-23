@@ -1,14 +1,19 @@
-import { KnexConnection, TSyringeContainer } from '@/adapters';
+import { AxiosClient, KnexConnection, TSyringeContainer } from '@/adapters';
 import {
   CreatePaymentIntentionUseCase,
   ListPaymentintentionUseCase,
 } from '@/core/usecases';
-import { PaymentInMemoryRepository } from '@/infra/repositories/in-memory';
+import { JsonPlaceHolderHttpIntegration } from '@/infra/integrations/http';
+import { PaymentMySQLRepository } from '@/infra/repositories/mysql';
+import { UserServiceProvider } from '@/infra/services';
 
 export class AppContainer extends TSyringeContainer {
   loadProviders(): Record<string, any> {
     return {
-      PaymentRepository: PaymentInMemoryRepository,
+      HttpClient: AxiosClient,
+      JsonPlaceHolderIntegration: JsonPlaceHolderHttpIntegration,
+      UserService: UserServiceProvider,
+      PaymentRepository: PaymentMySQLRepository,
       CreatePaymentIntention: CreatePaymentIntentionUseCase,
       ListPaymentsIntention: ListPaymentintentionUseCase,
     };

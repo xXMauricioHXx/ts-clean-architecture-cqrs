@@ -3,8 +3,8 @@ import { PaymentRepository } from '@/core/ports';
 export namespace CreatePaymentIntention {
   export type Params = {
     id: string;
-    payerId: string;
-    receiverId: string;
+    payerId: number;
+    receiverId: number;
     value: number;
     description?: string;
   };
