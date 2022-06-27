@@ -1,4 +1,4 @@
-import { CreatePaymentIntention } from '@/core/usecases';
+import { CreatePaymentIntention } from '@/domain/usecases';
 import { CreatePaymentIntentionController } from '@/presentation/http/controllers';
 
 export class CreatePaymentIntentionPresenter {

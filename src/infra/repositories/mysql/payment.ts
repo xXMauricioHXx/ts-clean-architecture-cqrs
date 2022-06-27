@@ -1,8 +1,8 @@
 import { Knex } from 'knex';
-import { inject, injectable } from 'tsyringe';
-import { Repository } from '@/infra/repositories/mysql';
-import { PaymentRepository } from '@/core/ports';
 import { table } from '@/shared/decorators';
+import { inject, injectable } from 'tsyringe';
+import { PaymentRepository } from '@/domain/repositories';
+import { Repository } from '@/infra/repositories/mysql';
 import { isoToMysqlDatetime } from '@/shared/helpers';
 
 @table('payments')
@@ -15,28 +15,27 @@ export class PaymentMySQLRepository
     super();
   }
 
-  async getValueInDate(payerId: number, payedDate: Date): Promise<number> {
-    const dateFilter = isoToMysqlDatetime(payedDate.toISOString());
+  async findByPayerIdAndDate(
+    payerId: number,
+    date: Date
+  ): Promise<PaymentRepository.Model[]> {
+    const dateFilter = isoToMysqlDatetime(date.toISOString());
 
-    const { total } = await this.transactionable()
-      .sum('value as total')
+    return this.transactionable()
       .where('payerId', payerId)
-      .andWhere('createdAt', dateFilter)
-      .first();
-
-    return total || 0;
+      .andWhere('createdAt', dateFilter);
   }
 
-  async createPayment(
-    payment: PaymentRepository.CreateParams
+  async create(
+    data: PaymentRepository.CreateParams
   ): Promise<PaymentRepository.Model> {
-    await this.create(payment);
-    const createdPayment = await this.getById(payment.id);
+    await this.transactionable().insert(data);
+    const createdPayment = await this.findById(data.id);
 
     return createdPayment!;
   }
 
-  listPayments(): Promise<PaymentRepository.Model[]> {
-    return this.all();
+  findAll(): Promise<PaymentRepository.Model[]> {
+    return this.findAll();
   }
 }

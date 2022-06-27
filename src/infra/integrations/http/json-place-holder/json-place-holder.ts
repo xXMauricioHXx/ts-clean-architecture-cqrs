@@ -4,7 +4,7 @@ import { env } from '@/main/env';
 import { checkObjectIsEmpty } from '@/shared/helpers';
 import { HttpStatus } from '@/infra/integrations/http/enum';
 import { HttpClient } from '@/infra/integrations/http/ports';
-import { JsonPlaceHolderIntegration } from '@/infra/services/ports';
+import { JsonPlaceHolderIntegration } from '@/domain/integrations/http';
 
 @injectable()
 export class JsonPlaceHolderHttpIntegration
@@ -24,8 +24,7 @@ export class JsonPlaceHolderHttpIntegration
 
       const isEmpty = checkObjectIsEmpty(data);
 
-      if (isEmpty) return null;
-      return data;
+      return isEmpty ? null : data;
     } catch (err) {
       const status = err?.response?.status;
 

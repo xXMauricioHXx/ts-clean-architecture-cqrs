@@ -1,4 +1,4 @@
-import { CreatePaymentIntention } from '@/core/usecases';
+import { CreatePaymentIntention } from '@/domain/usecases';
 import { CreatePaymentIntentionConsumer } from '@/presentation/amqp/consumers';
 
 export class CreatePaymentIntentionPresenter {

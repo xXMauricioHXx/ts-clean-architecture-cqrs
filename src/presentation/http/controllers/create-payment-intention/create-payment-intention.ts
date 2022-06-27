@@ -1,5 +1,4 @@
 import { inject, injectable } from 'tsyringe';
-import { CreatePaymentIntention } from '@/core/usecases';
 import {
   Controller,
   HttpRequest,
@@ -16,11 +15,9 @@ import {
   OutSideOfWindowValueError,
   SameOriginError,
   UserNotFoundError,
-} from '@/core/exceptions';
-import {
-  BadRequest,
-  NotFoundError,
-} from '@/presentation/http/controllers/exceptions';
+} from '@/domain/exceptions';
+import { BadRequest, NotFoundError } from '@/presentation/http/exceptions';
+import { CreatePaymentIntention } from '@/domain/usecases';
 
 @injectable()
 @post('/payments')

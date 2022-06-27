@@ -1,7 +1,7 @@
-import { PaymentRepository } from '@/core/ports';
+import { PaymentService } from '@/domain/services';
 
 export namespace ListPaymentsIntention {
-  export type Result = PaymentRepository.Model[];
+  export type Result = PaymentService.ListResult;
 }
 
 export interface ListPaymentsIntention {

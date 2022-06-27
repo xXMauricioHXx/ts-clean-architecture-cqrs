@@ -20,19 +20,11 @@ export abstract class Repository<T> {
     return this.database.transaction.bind(this.database);
   }
 
-  async create(
-    data: Record<string, any>,
-    trx?: Knex.Transaction
-  ): Promise<string> {
-    const [createdId] = await this.transactionable(trx).insert(data);
-    return createdId.toString();
-  }
-
-  async all(trx?: Knex.Transaction): Promise<T[]> {
+  async findAll(trx?: Knex.Transaction): Promise<T[]> {
     return this.transactionable(trx);
   }
 
-  async getById(id: string, trx?: Knex.Transaction): Promise<T | null> {
+  async findById(id: string, trx?: Knex.Transaction): Promise<T | null> {
     return this.transactionable(trx).where('id', id).first();
   }
 

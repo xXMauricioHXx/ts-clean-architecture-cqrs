@@ -4,7 +4,7 @@ import {
   MaxLimitReachedError,
   OutSideOfWindowValueError,
   SameOriginError,
-} from '@/core/exceptions';
+} from '@/domain/exceptions';
 
 export class Payment {
   public readonly id: string;

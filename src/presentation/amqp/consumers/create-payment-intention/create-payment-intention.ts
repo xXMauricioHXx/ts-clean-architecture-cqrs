@@ -10,8 +10,8 @@ import {
 } from '@/presentation/amqp/consumers';
 import logger from '@/logger';
 import { queue, schema } from '@/shared/decorators';
-import { CreatePaymentIntention } from '@/core/usecases';
 import { ValidationError } from '@/shared/validation-error';
+import { CreatePaymentIntention } from '@/domain/usecases';
 
 @injectable()
 @queue('create-payment-intention')

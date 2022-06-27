@@ -1,7 +1,7 @@
 import { inject, injectable } from 'tsyringe';
-import { UserService } from '@/core/ports';
-import { UserNotFoundError } from '@/core/exceptions';
-import { JsonPlaceHolderIntegration } from '@/infra/services/ports';
+import { UserService } from '@/domain/services';
+import { UserNotFoundError } from '@/domain/exceptions';
+import { JsonPlaceHolderIntegration } from '@/domain/integrations/http';
 
 @injectable()
 export class UserServiceProvider implements UserService {

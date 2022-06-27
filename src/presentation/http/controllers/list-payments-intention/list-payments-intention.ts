@@ -1,8 +1,8 @@
 import { inject, injectable } from 'tsyringe';
 import { Controller, HttpResponse } from '@/presentation/http/ports';
 import { get } from '@/shared/decorators';
-import { ListPaymentsIntention } from '@/core/usecases';
 import { ListPaymentsIntentionPresenter } from '@/presentation/http/controllers';
+import { ListPaymentsIntention } from '@/domain/usecases';
 
 @injectable()
 @get('/payments')

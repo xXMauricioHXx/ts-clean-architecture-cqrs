@@ -19,9 +19,12 @@ export namespace PaymentRepository {
 }
 
 export interface PaymentRepository {
-  getValueInDate(payerId: number, payedDate: Date): Promise<number>;
-  createPayment(
-    payment: PaymentRepository.CreateParams
+  findByPayerIdAndDate(
+    payerId: number,
+    date: Date
+  ): Promise<PaymentRepository.Model[]>;
+  create(
+    data: PaymentRepository.CreateParams
   ): Promise<PaymentRepository.Model>;
-  listPayments(): Promise<PaymentRepository.Model[]>;
+  findAll(): Promise<PaymentRepository.Model[]>;
 }

@@ -1,4 +1,4 @@
-import { PaymentRepository } from '@/core/ports';
+import { PaymentRepository } from '@/domain/repositories';
 
 export namespace CreatePaymentIntention {
   export type Params = {

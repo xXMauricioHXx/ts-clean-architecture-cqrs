@@ -4,7 +4,7 @@ import {
   Middleware,
 } from '@/presentation/http/ports';
 import logger from '@/logger';
-import { HttpError } from '@/presentation/http/controllers/exceptions';
+import { HttpError } from '@/presentation/http/exceptions';
 
 export class ErrorHandlerMiddleware implements Middleware {
   handle(req: HttpRequest, error: any): HttpResponse {

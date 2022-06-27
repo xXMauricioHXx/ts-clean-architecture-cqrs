@@ -1,14 +1,14 @@
 import { inject, injectable } from 'tsyringe';
-import { Payment } from '@/core/entities';
-import { PaymentRepository, UserService } from '@/core/ports';
-import { CreatePaymentIntention } from '@/core/usecases';
 import { dateNow } from '@/shared/helpers';
+import { Payment } from '@/domain/entities';
+import { PaymentService, UserService } from '@/domain/services';
+import { CreatePaymentIntention } from '@/domain/usecases';
 
 @injectable()
 export class CreatePaymentIntentionUseCase implements CreatePaymentIntention {
   constructor(
-    @inject('PaymentRepository')
-    private readonly paymentRepository: PaymentRepository,
+    @inject('PaymentService')
+    private readonly paymentService: PaymentService,
     @inject('UserService') private readonly userService: UserService
   ) {}
 
@@ -20,7 +20,7 @@ export class CreatePaymentIntentionUseCase implements CreatePaymentIntention {
 
     await this.checkPayerAndReceiverExists(payerId, receiverId);
 
-    const valueInDate = await this.paymentRepository.getValueInDate(
+    const valueInDate = await this.paymentService.getValueInDate(
       payerId,
       payedDate
     );
@@ -35,7 +35,7 @@ export class CreatePaymentIntentionUseCase implements CreatePaymentIntention {
       payedDate,
     });
 
-    const createdPayment = await this.paymentRepository.createPayment({
+    const createdPayment = await this.paymentService.createPayment({
       payerId,
       receiverId,
       description: payment.description,
