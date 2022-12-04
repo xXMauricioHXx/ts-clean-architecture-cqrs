@@ -1,24 +1,9 @@
-import { CreatePaymentIntention } from '@/domain/usecases';
 import { CreatePaymentIntentionController } from '@/presentation/http/controllers';
-
+import { CreatePayment } from '@/core/domain/commands/create-payment';
 export class CreatePaymentIntentionPresenter {
-  static toJSON(
-    data: CreatePaymentIntention.Result
-  ): CreatePaymentIntentionController.Response {
-    return {
-      id: data.id,
-      payer_id: data.payerId,
-      receiver_id: data.receiverId,
-      value: data.value,
-      description: data.description,
-      created_at: data.createdAt.toISOString(),
-      updated_at: data.updatedAt.toISOString(),
-    };
-  }
-
-  static toUseCase(
+  static toCommand(
     data: CreatePaymentIntentionController.Request
-  ): CreatePaymentIntention.Params {
+  ): CreatePayment.Params {
     return {
       id: data.id,
       payerId: data.payer_id,

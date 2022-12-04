@@ -8,15 +8,9 @@ services:
     environment:
       - MYSQL_ROOT_PASSWORD=root
       - MYSQL_DATABASE=${MYSQL_SCHEMA}
-      - MYSQL_USER=${MYSQL_USER}
       - MYSQL_PASSWORD=${MYSQL_PASSWORD}
-      - MYSQL_ALLOW_EMPTY_PASSWORD='yes'
     ports:
       - '3305:3306'
-    volumes:
-      - '~/.docker-conf/db/data:/var/lib/mysql'
-      - '~/.docker-conf/db/my.cnf:/etc/mysql/conf.d/my.cnf'
-      - '~/.docker-conf/db/sql:/docker-entrypoint-initdb.d'
   rabbit:
     image: rabbitmq:3.8.3-management
     container_name: 'rabbitmq-server'

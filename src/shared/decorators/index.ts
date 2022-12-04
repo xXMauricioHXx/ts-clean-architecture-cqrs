@@ -3,3 +3,4 @@ export * from '@/shared/decorators/grpc';
 export * from '@/shared/decorators/http';
 export * from '@/shared/decorators/repository';
 export * from '@/shared/decorators/schema';
+export * from '@/shared/decorators/cqrs';

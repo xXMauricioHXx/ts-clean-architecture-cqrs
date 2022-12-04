@@ -1,5 +1,5 @@
 import { injectable } from 'tsyringe';
-import { PaymentRepository } from '@/domain/repositories';
+import { PaymentRepository } from '@/core/domain/repositories';
 
 @injectable()
 export class PaymentInMemoryRepository implements PaymentRepository {

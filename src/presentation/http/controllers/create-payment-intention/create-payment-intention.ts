@@ -1,10 +1,9 @@
 import { inject, injectable } from 'tsyringe';
-import {
-  Controller,
-  HttpRequest,
-  HttpResponse,
-} from '@/presentation/http/ports';
 import { httpStatus, post, schema } from '@/shared/decorators';
+import { CommandBus } from '@/core/domain/commands/command-bus';
+import { CreatePaymentCommand } from '@/core/application/commands';
+import { Controller, HttpRequest } from '@/presentation/http/ports';
+import { BadRequest, NotFoundError } from '@/presentation/http/exceptions';
 import {
   CreatePaymentIntentionPresenter,
   createPaymentIntentionSchema,
@@ -15,34 +14,25 @@ import {
   OutSideOfWindowValueError,
   SameOriginError,
   UserNotFoundError,
-} from '@/domain/exceptions';
-import { BadRequest, NotFoundError } from '@/presentation/http/exceptions';
-import { CreatePaymentIntention } from '@/domain/usecases';
+} from '@/core/domain/exceptions';
 
 @injectable()
 @post('/payments')
 export class CreatePaymentIntentionController extends Controller {
-  constructor(
-    @inject('CreatePaymentIntention')
-    private readonly createPaymentIntentionUseCase: CreatePaymentIntention
-  ) {
+  constructor(@inject('CommandBus') private readonly commandBus: CommandBus) {
     super();
   }
 
   @httpStatus(201)
   @schema(createPaymentIntentionSchema)
-  async handle(
-    req: HttpRequest
-  ): Promise<HttpResponse<CreatePaymentIntentionController.Response>> {
+  async handle(req: HttpRequest): Promise<void> {
     const data = req.body as CreatePaymentIntentionController.Request;
 
-    const createdPayment = await this.createPaymentIntentionUseCase.create(
-      CreatePaymentIntentionPresenter.toUseCase(data)
+    const command = new CreatePaymentCommand(
+      CreatePaymentIntentionPresenter.toCommand(data)
     );
 
-    return {
-      data: CreatePaymentIntentionPresenter.toJSON(createdPayment),
-    };
+    await this.commandBus.syncDispatchCommand(command);
   }
 
   exception(error: Error): Error {
@@ -67,16 +57,6 @@ export class CreatePaymentIntentionController extends Controller {
 }
 
 export namespace CreatePaymentIntentionController {
-  export type Response = {
-    id: string;
-    payer_id: number;
-    receiver_id: number;
-    description?: string;
-    value: number;
-    created_at: string;
-    updated_at: string;
-  };
-
   export type Request = {
     id: string;
     payer_id: number;

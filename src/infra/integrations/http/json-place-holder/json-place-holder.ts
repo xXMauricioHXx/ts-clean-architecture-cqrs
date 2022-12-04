@@ -4,7 +4,7 @@ import { env } from '@/main/env';
 import { checkObjectIsEmpty } from '@/shared/helpers';
 import { HttpStatus } from '@/infra/integrations/http/enum';
 import { HttpClient } from '@/infra/integrations/http/ports';
-import { JsonPlaceHolderIntegration } from '@/domain/integrations/http';
+import { JsonPlaceHolderIntegration } from '@/core/domain/integrations/http';
 
 @injectable()
 export class JsonPlaceHolderHttpIntegration

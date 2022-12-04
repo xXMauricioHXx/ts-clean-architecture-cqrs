@@ -1,7 +1,7 @@
 import { Knex } from 'knex';
 import { table } from '@/shared/decorators';
 import { inject, injectable } from 'tsyringe';
-import { PaymentRepository } from '@/domain/repositories';
+import { PaymentRepository } from '@/core/domain/repositories';
 import { Repository } from '@/infra/repositories/mysql';
 import { isoToMysqlDatetime } from '@/shared/helpers';
 

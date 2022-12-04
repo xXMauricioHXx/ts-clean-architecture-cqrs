@@ -5,3 +5,7 @@ export interface Container {
 
   loadContainer(): void;
 }
+
+export enum ContainerEvent {
+  Loaded = 'CONTAINER_LOADED',
+}
