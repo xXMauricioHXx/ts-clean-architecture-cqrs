@@ -1,6 +1,6 @@
 import { event } from '@/shared/decorators';
-import { Event } from '@/core/application/ports/event';
-import { CreatePayment } from '@/core/domain/commands/create-payment';
+import { Event } from '@/core/application/ports';
+import { CreatePayment } from '@/core/domain/commands';
 
 @event()
 export class PaymentCreatedEvent extends Event {

@@ -1,6 +1,6 @@
 import { inject, injectable } from 'tsyringe';
 import { httpStatus, post, schema } from '@/shared/decorators';
-import { CommandBus } from '@/core/domain/commands/command-bus';
+import { Bus } from '@/core/domain/commands/bus';
 import { CreatePaymentCommand } from '@/core/application/commands';
 import { Controller, HttpRequest } from '@/presentation/http/ports';
 import { BadRequest, NotFoundError } from '@/presentation/http/exceptions';
@@ -19,7 +19,7 @@ import {
 @injectable()
 @post('/payments')
 export class CreatePaymentIntentionController extends Controller {
-  constructor(@inject('CommandBus') private readonly commandBus: CommandBus) {
+  constructor(@inject('Bus') private readonly bus: Bus) {
     super();
   }
 
@@ -32,7 +32,7 @@ export class CreatePaymentIntentionController extends Controller {
       CreatePaymentIntentionPresenter.toCommand(data)
     );
 
-    await this.commandBus.syncDispatchCommand(command);
+    await this.bus.syncDispatchCommand(command);
   }
 
   exception(error: Error): Error {

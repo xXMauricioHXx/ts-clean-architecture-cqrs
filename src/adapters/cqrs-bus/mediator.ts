@@ -1,14 +1,15 @@
 import { container, InjectionToken } from 'tsyringe';
 import { Command } from '@/core/application/ports/command';
 import { Handler } from '@/core/application/ports/handler';
-import { CommandBusConfig, CommandEvent } from '@/adapters/ports';
+import { CommandEvent } from '@/adapters/ports';
 import { EventEmmiter } from '@/adapters/event-emmiter/event-emmiter';
 import { Event, EventHandle } from '@/core/application/ports/event';
+import { Query, QueryHandle } from '@/core/application/ports';
 
 export abstract class Mediator {
   protected event: EventEmmiter;
 
-  constructor(protected commandBusConfig: CommandBusConfig) {
+  constructor() {
     this.event = EventEmmiter.getInstance();
     this.event.on(
       CommandEvent.DISPATCH_COMMAND,
@@ -16,36 +17,31 @@ export abstract class Mediator {
     );
   }
 
-  private getHandleByCommand(command: Command): Handler<any> {
-    const { commandHandleMap } = this.commandBusConfig;
-
+  private getCommandHandleByCommand(command: Command): Handler<any> {
     const commandName = command.name!;
-    const handler = commandHandleMap[commandName] as InjectionToken;
+    const commandHandler = container.resolve<Handler<any>>(commandName);
 
-    if (!handler) {
+    if (!commandHandler) {
       throw new Error(
         `Command ${command.name} not found. Please register this command in the container, puting the command in the property commandHandleMap.`
       );
     }
 
-    return container.resolve(handler) as Handler<any>;
+    return commandHandler;
   }
 
   private asyncCommandResolver(command: Command): void {
-    const handlerInstance = this.getHandleByCommand(command);
+    const handlerInstance = this.getCommandHandleByCommand(command);
     handlerInstance.execute(command);
   }
 
-  private registerEvent(event: Event) {}
-
   protected commandResolver(command: Command): Handler<any> {
-    return this.getHandleByCommand(command);
+    return this.getCommandHandleByCommand(command);
   }
 
   protected eventResolver(event: Event): EventHandle<any> {
-    const { eventHandleMap } = this.commandBusConfig;
     const eventName = event.name!;
-    const eventHandle = eventHandleMap[eventName] as InjectionToken;
+    const eventHandle = container.resolve<EventHandle<any>>(eventName);
 
     if (!eventHandle) {
       throw new Error(
@@ -53,6 +49,19 @@ export abstract class Mediator {
       );
     }
 
-    return container.resolve(eventHandle) as EventHandle<any>;
+    return eventHandle;
+  }
+
+  protected queryResolver(query: Query): QueryHandle<any> {
+    const queryName = query.name!;
+    const queryHandle = container.resolve<QueryHandle<any>>(queryName);
+
+    if (!queryHandle) {
+      throw new Error(
+        `Query ${query.name} not found. Please register this query in the container, puting the event in the property queryHandleMap.`
+      );
+    }
+
+    return queryHandle;
   }
 }

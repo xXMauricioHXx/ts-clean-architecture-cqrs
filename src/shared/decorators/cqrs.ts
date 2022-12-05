@@ -10,3 +10,7 @@ export const event = function (): Function {
 export const command = function (): Function {
   return addNameAndType;
 };
+
+export const query = function (): Function {
+  return addNameAndType;
+};

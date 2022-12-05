@@ -1,5 +1,5 @@
 import logger from '@/logger';
-import { EventHandle } from '@/core/application/ports/event';
+import { EventHandle } from '@/core/application/ports';
 import { PaymentCreatedEvent } from '@/core/application/events';
 
 export class PaymentCreatedEventHandle

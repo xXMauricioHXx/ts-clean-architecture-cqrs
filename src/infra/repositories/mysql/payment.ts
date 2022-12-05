@@ -36,6 +36,6 @@ export class PaymentMySQLRepository
   }
 
   findAll(): Promise<PaymentRepository.Model[]> {
-    return this.findAll();
+    return super.findAll();
   }
 }

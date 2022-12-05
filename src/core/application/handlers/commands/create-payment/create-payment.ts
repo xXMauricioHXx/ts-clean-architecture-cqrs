@@ -1,11 +1,11 @@
 import { inject, injectable } from 'tsyringe';
 import { dateNow } from '@/shared/helpers';
 import { Payment } from '@/core/domain/entities';
+import { Bus } from '@/core/domain/commands/bus';
 import { Handler } from '@/core/application/ports/handler';
-import { CommandBus } from '@/core/domain/commands/command-bus';
-import { PaymentService, UserService } from '@/core/domain/services';
-import { CreatePaymentCommand } from '@/core/application/commands/create-payment/create-payment';
 import { PaymentCreatedEvent } from '@/core/application/events';
+import { CreatePaymentCommand } from '@/core/application/commands';
+import { PaymentService, UserService } from '@/core/domain/services';
 
 @injectable()
 export class CreatePaymentHandler implements Handler<CreatePaymentCommand> {
@@ -13,7 +13,7 @@ export class CreatePaymentHandler implements Handler<CreatePaymentCommand> {
     @inject('PaymentService')
     private readonly paymentService: PaymentService,
     @inject('UserService') private readonly userService: UserService,
-    @inject('CommandBus') private readonly commandBus: CommandBus
+    @inject('Bus') private readonly bus: Bus
   ) {}
 
   async execute(command: CreatePaymentCommand): Promise<void> {
@@ -45,7 +45,7 @@ export class CreatePaymentHandler implements Handler<CreatePaymentCommand> {
       value: payment.value,
     });
 
-    this.commandBus.dispatchEvent(new PaymentCreatedEvent(command.data));
+    this.bus.dispatchEvent(new PaymentCreatedEvent(command.data));
   }
 
   private async checkPayerAndReceiverExists(
